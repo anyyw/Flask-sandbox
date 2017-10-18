@@ -6,7 +6,7 @@ api = Api(app)
 
 todos = {}
 
-class JobListAPI(Resource):
+class JobAPI(Resource):
     def get(self, todo_id):
         return {todo_id: todos[todo_id]}
 
@@ -14,8 +14,9 @@ class JobListAPI(Resource):
         todos[todo_id] = request.form['data']
         return {todo_id: todos[todo_id]}
 
-class JobAPI(Resource):
-    pass 
+class JobListAPI(Resource):
+    def get(self):
+        return todos 
 
 api.add_resource(Tasks, '/<string:todo_id>')
 
