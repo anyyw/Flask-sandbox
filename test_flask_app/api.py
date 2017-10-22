@@ -1,10 +1,19 @@
-from flask import Flask, request
+from flask import Flask, request, url_for
 from flask_restful import Resource, Api, reqparse
 
 app = Flask(__name__)
 api = Api(app)
 
 jobs = {}
+
+def id_to_uri(job):
+    new_job = {}
+    for field in job:
+        if field == 'id':
+            new_job['uri'] = url_for('get_job', job_id=job['id'], _external=True)
+        else:
+            new_job[field] = job[field]
+    return new_job
 
 def validate_jobid_exists(job_id):
         if job_id not in jobs:
@@ -19,16 +28,13 @@ class JobAPI(Resource):
         super.(JobAPI, self).__init__()
 
     def get(self, job_id):
-        job = filter(lambda t: t['id'] == id, jobs)
-        if len(job) == 0:
-            abort(404)
-        return 
+        validate_jobid_exists(job_id)
+        job = jobs[job_id]
+        return { 'job': id_to_uri(job) }
 
     def put(self, job_id):
-        job = filter(lambda t: t['id'] == id, jobs)
-        if len(job) == 0:
-            abort(404)
-        job = job[0]
+        args = self.reqparse.parse_args()
+        
         return {job_id: jobs[job_id]}
 
 class JobListAPI(Resource):
