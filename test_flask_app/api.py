@@ -6,6 +6,10 @@ api = Api(app)
 
 jobs = {}
 
+def validate_jobid_exists(job_id):
+        if job_id not in jobs:
+            abort(404, message="Job {} does not exist".format(job_id))
+
 class JobAPI(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
@@ -15,10 +19,16 @@ class JobAPI(Resource):
         super.(JobAPI, self).__init__()
 
     def get(self, job_id):
-        return {job_id: jobs[job_id]}
+        job = filter(lambda t: t['id'] == id, jobs)
+        if len(job) == 0:
+            abort(404)
+        return 
 
     def put(self, job_id):
-        jobs[job_id] = request.form['data']
+        job = filter(lambda t: t['id'] == id, jobs)
+        if len(job) == 0:
+            abort(404)
+        job = job[0]
         return {job_id: jobs[job_id]}
 
 class JobListAPI(Resource):
