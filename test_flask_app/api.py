@@ -33,8 +33,12 @@ class JobAPI(Resource):
         return { 'job': id_to_uri(job) }
 
     def put(self, job_id):
+        validate_jobid_exists(job_id)
         args = self.reqparse.parse_args()
-        
+        job = jobs[job_id]
+        for k, v in args.iteritems():
+            if v != None:
+                job[k] = v
         return {job_id: jobs[job_id]}
 
 class JobListAPI(Resource):
