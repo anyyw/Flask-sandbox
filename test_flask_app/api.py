@@ -25,7 +25,7 @@ class JobAPI(Resource):
         self.reqparse.add_argument('title', type = str, location = 'json')
         self.reqparse.add_argument('description', type = str, loctiton = 'json')
         self.reqparse.add_argument('done', type = bool, location = 'json')
-        super.(JobAPI, self).__init__()
+        super(JobAPI, self).__init__()
 
     def get(self, job_id):
         validate_jobid_exists(job_id)
@@ -47,7 +47,7 @@ class JobListAPI(Resource):
         self.reqparse.add_argument('title', type = str, required = True,
             help = 'No Job title provided', location = 'json')
         self.reqparse.add_argument('description', type = str, default = "", location = 'json')
-        super.(JobListAPI, self).__init__()
+        super(JobListAPI, self).__init__()
 
     def get(self):
         return jobs 
