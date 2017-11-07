@@ -14,11 +14,7 @@ def id_to_uri(job):
         else:
             new_job[field] = job[field]
     return new_job
-
-def validate_jobid_exists(job_id):
-        if job_id not in jobs:
-            abort(404, message="Job {} does not exist".format(job_id))
-
+            
 class JobAPI(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
@@ -28,8 +24,9 @@ class JobAPI(Resource):
         super(JobAPI, self).__init__()
 
     def get(self, job_id):
-        validate_jobid_exists(job_id)
-        job = jobs[job_id]
+        job = [job for job in jobs if job['job_id'] == job_id]
+        if len(job) == 0:
+        	abort(404, message="Job {} does not exist".format(job_id))
         return { 'job': id_to_uri(job) }
 
     def put(self, job_id):
@@ -40,6 +37,10 @@ class JobAPI(Resource):
             if v != None:
                 job[k] = v
         return {job_id: jobs[job_id]}
+
+    def delete(self, job_id):
+    	validate_jobid_exists(job_id)
+
 
 class JobListAPI(Resource):
     def __init__(self):
