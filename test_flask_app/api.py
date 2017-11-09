@@ -1,4 +1,4 @@
-from flask import Flask, request, url_for
+from flask import Flask, request, url_for, abort
 from flask_restful import Resource, Api, reqparse
 
 app = Flask(__name__)
@@ -14,22 +14,19 @@ def id_to_uri(job):
         else:
             new_job[field] = job[field]
     return new_job
-
-def validate_jobid_exists(job_id):
-        if job_id not in jobs:
-            abort(404, message="Job {} does not exist".format(job_id))
-
+            
 class JobAPI(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
         self.reqparse.add_argument('title', type = str, location = 'json')
         self.reqparse.add_argument('description', type = str, loctiton = 'json')
         self.reqparse.add_argument('done', type = bool, location = 'json')
-        super.(JobAPI, self).__init__()
+        super(JobAPI, self).__init__()
 
     def get(self, job_id):
-        validate_jobid_exists(job_id)
-        job = jobs[job_id]
+        job = [job for job in jobs if job['job_id'] == job_id]
+        if len(job) == 0:
+        	abort(404, message="Job {} does not exist".format(job_id))
         return { 'job': id_to_uri(job) }
 
     def put(self, job_id):
@@ -41,13 +38,17 @@ class JobAPI(Resource):
                 job[k] = v
         return {job_id: jobs[job_id]}
 
+    def delete(self, job_id):
+    	validate_jobid_exists(job_id)
+
+
 class JobListAPI(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
         self.reqparse.add_argument('title', type = str, required = True,
             help = 'No Job title provided', location = 'json')
         self.reqparse.add_argument('description', type = str, default = "", location = 'json')
-        super.(JobListAPI, self).__init__()
+        super(JobListAPI, self).__init__()
 
     def get(self):
         return jobs 
