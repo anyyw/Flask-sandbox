@@ -22,6 +22,8 @@ class SequentialModelAPI(Resource):
         	abort(404, message="Job {} does not exist".format(job_id))
         return { 'job': id_to_uri(job) }
 
+    def patch(self, job_id):
+
     def put(self, job_id):
         args = self.reqparse.parse_args()
         job = jobs[job_id]
@@ -46,7 +48,7 @@ class JobListAPI(Resource):
 
 '''
 
-api.add_resource(SequentialModelAPI, '/job/api/v1.0/sequential', endpoint='sequential')
+api.add_resource(SequentialModelAPI, '/v1/sequentialmodel', endpoint='sequential')
 #api.add_resource(JobAPI, '/job/api/v1.0/jobs/<int:job_id>', endpoint='job')
 
 if __name__ == '__main__':
