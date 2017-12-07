@@ -6,7 +6,7 @@ from keras.models import Sequental
 app = Flask(__name__)
 api = Api(app)
 
-jobs = {}
+models = {}
             
 class SequentialModelAPI(Resource):
     def __init__(self):
@@ -14,7 +14,7 @@ class SequentialModelAPI(Resource):
         self.reqparse.add_argument('title', type = str, location = 'json')
         self.reqparse.add_argument('description', type = str, loctiton = 'json')
         self.reqparse.add_argument('done', type = bool, location = 'json')
-        super(JobAPI, self).__init__()
+        super()
 
     def get(self, job_id):
         job = [job for job in jobs if job['job_id'] == job_id]
