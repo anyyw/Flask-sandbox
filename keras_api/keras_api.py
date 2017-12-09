@@ -1,3 +1,5 @@
+#!flast/bin/python
+
 from flask import Flask, request, url_for, abort
 from flask_restful import Resource, Api, reqparse
 import keras
@@ -16,23 +18,25 @@ class SequentialModelAPI(Resource):
         self.reqparse.add_argument('done', type = bool, location = 'json')
         super()
 
-    def get(self, job_id):
-        job = [job for job in jobs if job['job_id'] == job_id]
-        if len(job) == 0:
-        	abort(404, message="Job {} does not exist".format(job_id))
-        return { 'job': id_to_uri(job) }
+    def get(self, model_id):
+        model = [model for model in models if model['model_id'] == model_id]
+        if len(model) == 0:
+        	abort(404, message="Sequential Model {} does not exist".format(model_id))
+        return { 'model': id_to_uri(model) }
 
-    def patch(self, job_id):
+    def patch(self, model_id):
 
-    def put(self, job_id):
+    def post(self, model_id):
         args = self.reqparse.parse_args()
-        job = jobs[job_id]
+        model = models[model_id]
         for k, v in args.iteritems():
             if v != None:
-                job[k] = v
-        return {job_id: jobs[job_id]}
+                model[k] = v
 
-    def delete(self, job_id):
+
+        return {model_id: model[model_id]}
+
+    def delete(self, model_id):
 
 '''
 class JobListAPI(Resource):
@@ -49,7 +53,7 @@ class JobListAPI(Resource):
 '''
 
 api.add_resource(SequentialModelAPI, '/v1/sequentialmodel', endpoint='sequential')
-#api.add_resource(JobAPI, '/job/api/v1.0/jobs/<int:job_id>', endpoint='job')
+#api.add_resource(JobAPI, '/job/api/v1.0/jobs/<int:model_id>', endpoint='job')
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
