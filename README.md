@@ -1,8 +1,10 @@
-# Refactored-Guac (Working title)
+# Flask Sandbox
 
 ## What is it?
 
-This will likely become a Python flask based API that will be used for training ML models. The goal will be to run this on a Docker container running nvidia-docker, with the eventuality of being ported over to Kubernetes. 
+This is a playground for practicing Flask-restful API creation. The main point of this project is to develop my backend development skills in API creation, with a little bit of Machine Learning thrown into the mix.
+
+The goal will be to run this on a Docker container running nvidia-docker, with the eventuality of being ported over to Kubernetes. 
 
 ## The goal for now
 

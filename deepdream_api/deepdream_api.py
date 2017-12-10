@@ -1,21 +1,51 @@
 #!flask/bin/python
 
+#import flask and flask-restful libraries
 from flask import Flask, request, url_for, abort
 from flask_restful import Resource, Api, reqparse
-import keras
-from keras.models import Sequental
+
+#import helper libs libraries
+from keras.preprocessing.image import load_img, img_to_array
+import numpy as np
+import scipy
+
+#import keras deepdreaming libs
+from keras.applications import inception_v3
+from keras import backend as K
 
 app = Flask(__name__)
 api = Api(app)
 
 models = {}
+
+def preprocess_image(image_path):
+    # Util function to open, resize and format pictures
+    # into appropriate tensors.
+    img = load_img(image_path)
+    img = img_to_array(img)
+    img = np.expand_dims(img, axis=0)
+    img = inception_v3.preprocess_input(img)
+    return img
+
+
+def deprocess_image(x):
+    # Util function to convert a tensor into a valid image.
+    if K.image_data_format() == 'channels_first':
+        x = x.reshape((3, x.shape[2], x.shape[3]))
+        x = x.transpose((1, 2, 0))
+    else:
+        x = x.reshape((x.shape[1], x.shape[2], 3))
+    x /= 2.
+    x += 0.5
+    x *= 255.
+    x = np.clip(x, 0, 255).astype('uint8')
+    return x
             
-class SequentialModelAPI(Resource):
+class DeepDreamAPI(Resource):
     def __init__(self):
         self.reqparse = reqparse.RequestParser()
-        self.reqparse.add_argument('title', type = str, location = 'json')
-        self.reqparse.add_argument('description', type = str, loctiton = 'json')
-        self.reqparse.add_argument('done', type = bool, location = 'json')
+        self.reqparse.add_argument('base_image_uri', type = str, location = 'json')
+        self.reqparse.add_argument('result_image_uri', type = str, loctiton = 'json')
         super()
 
     def get(self, model_id):
@@ -34,6 +64,13 @@ class SequentialModelAPI(Resource):
         return {model_id: model[model_id]}
 
     def delete(self, model_id):
+
+class JobAPI(Resource):
+    def __init__(self):
+        self.reqpasrse = reqpasrse.RequestParser()
+        self.reqpasrse.add_argument('title' type=str, location='json')
+
+
 
 '''
 class JobListAPI(Resource):
