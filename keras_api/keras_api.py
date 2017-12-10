@@ -19,10 +19,9 @@ class SequentialModelAPI(Resource):
         super()
 
     def get(self, model_id):
-        model = [model for model in models if model['model_id'] == model_id]
-        if len(model) == 0:
+        if(model_id not in models):
         	abort(404, message="Sequential Model {} does not exist".format(model_id))
-        return { 'model': id_to_uri(model) }
+        return { 'model': id_to_uri(models[model_id]) }
 
     def patch(self, model_id):
 
