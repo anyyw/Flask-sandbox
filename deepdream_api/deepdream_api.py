@@ -1,5 +1,11 @@
 #!flask/bin/python
 
+"""
+Models will be created and trained using an input image
+Job will be used to generate images based off of a model
+and will output an image to a uri
+"""
+
 #import flask and flask-restful libraries
 from flask import Flask, request, url_for, abort
 from flask_restful import Resource, Api, reqparse
@@ -17,6 +23,7 @@ app = Flask(__name__)
 api = Api(app)
 
 models = {}
+jobs = {}
 
 def preprocess_image(image_path):
     # Util function to open, resize and format pictures
@@ -50,7 +57,7 @@ class DeepDreamAPI(Resource):
 
     def get(self, model_id):
         if(model_id not in models):
-        	abort(404, message="Sequential Model {} does not exist".format(model_id))
+        	abort(404, message="Model {} does not exist".format(model_id))
         return { 'model': id_to_uri(models[model_id]) }
 
     def patch(self, model_id):
@@ -70,7 +77,10 @@ class JobAPI(Resource):
         self.reqpasrse = reqpasrse.RequestParser()
         self.reqpasrse.add_argument('title' type=str, location='json')
 
-
+    def get(self, job_id):
+        if(job_id not in jobs):
+            abort(404, message="Job {} does not exist".format(job_id))
+        return { 'job': id_to_uri(job[job_id]) }
 
 '''
 class JobListAPI(Resource):
