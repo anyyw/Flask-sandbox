@@ -97,19 +97,6 @@ class JobAPI(Resource):
             abort(404, message="Job {} does not exist".format(job_id))
         return { 'job': id_to_uri(job[job_id]) }
 
-'''
-class JobListAPI(Resource):
-    def __init__(self):
-        self.reqparse = reqparse.RequestParser()
-        self.reqparse.add_argument('title', type = str, required = True,
-            help = 'No Job title provided', location = 'json')
-        self.reqparse.add_argument('description', type = str, default = "", location = 'json')
-        super(JobListAPI, self).__init__()
-
-    def get(self):
-        return jobs 
-
-'''
 
 class DeepDreamModel(Object):
     def __init__(self):
