@@ -1,4 +1,4 @@
-#!flast/bin/python
+#!flask/bin/python
 
 from flask import Flask, request, url_for, abort
 from flask_restful import Resource, Api, reqparse
@@ -31,8 +31,6 @@ class SequentialModelAPI(Resource):
         for k, v in args.iteritems():
             if v != None:
                 model[k] = v
-
-
         return {model_id: model[model_id]}
 
     def delete(self, model_id):
