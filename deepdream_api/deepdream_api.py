@@ -97,6 +97,10 @@ class JobAPI(Resource):
             abort(404, message="Job {} does not exist".format(job_id))
         return { 'job': id_to_uri(job[job_id]) }
 
+    def post(self, job_id):
+        args = self.reqpasrse.parse_args()
+
+
 
 class DeepDreamModel(Object):
     def __init__(self):
@@ -165,6 +169,44 @@ class DeepDreamModel(Object):
             print('..Loss value at', i, ':', loss_value)
             x += step * grad_values
         return x
+
+    def dream():
+        
+        # Playing with these hyperparameters will also allow you to achieve new effects
+        step = 0.01  # Gradient ascent step size
+        num_octave = 3  # Number of scales at which to run gradient ascent
+        octave_scale = 1.4  # Size ratio between scales
+        iterations = 20  # Number of ascent steps per scale
+        max_loss = 10.
+
+        img = preprocess_image(self.base_image_path)
+        if K.image_data_format() == 'channels_first':
+            original_shape = img.shape[2:]
+        else:
+            original_shape = img.shape[1:3]
+        successive_shapes = [original_shape]
+        for i in range(1, num_octave):
+            shape = tuple([int(dim / (octave_scale ** i)) for dim in original_shape])
+            successive_shapes.append(shape)
+        successive_shapes = successive_shapes[::-1]
+        original_img = np.copy(img)
+        shrunk_original_img = resize_img(img, successive_shapes[0])
+
+        for shape in successive_shapes:
+            print('Processing image shape', shape)
+            img = resize_img(img, shape)
+            img = gradient_ascent(img,
+                                  iterations=iterations,
+                                  step=step,
+                                  max_loss=max_loss)
+            upscaled_shrunk_original_img = resize_img(shrunk_original_img, shape)
+            same_size_original = resize_img(original_img, shape)
+            lost_detail = same_size_original - upscaled_shrunk_original_img
+
+            img += lost_detail
+            shrunk_original_img = resize_img(original_img, shape)
+
+        #Add url to image 
 
 
 api.add_resource(DeepDreamAPI, '/v1/deepdream', endpoint='deepdream')
