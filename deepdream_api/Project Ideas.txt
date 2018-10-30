@@ -1,0 +1,12 @@
+Project Ideas:
+
+Remote desktop management
+- Set up Raspberry Pi for wake on LAN with Desktop eOS
+- Set up alfred workflow/CLI command to make Pi send out packet to wake desktop
+- Set up GRUB command in linux for booting up windows, allow Pi to run said command and set up command on mac to be able to execute it
+- Set up eOS commands to check current status (awake/sleeping) and sleep through ssh command if needed
+
+Alfred remote text expander
+- Use simple alfred workflow to copy templates to clipboard
+- Keep the repo of templates in either google docs or locally
+

@@ -19,6 +19,7 @@ import scipy
 from keras.applications import inception_v3
 from keras import backend as K
 
+#Initialize extensions
 app = Flask(__name__)
 api = Api(app)
 
